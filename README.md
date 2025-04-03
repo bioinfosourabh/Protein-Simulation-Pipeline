@@ -89,5 +89,9 @@ gmx gyrate -s md.tpr -f md_noPBC.xtc -o gyrate.xvg
 | *.gro, topol.top  | Coordinate and topology files   |
 | *.tpr, *.cpt, *.edr  | Run input and output files   |
 | *.xvg  | Energy and analysis output for plotting   |
+All intermediate and final results are saved step-by-step to maintain reproducibility and traceability.
 
 
+## Notes
+Ensure the .mdp files used for each phase are appropriately tuned to your simulation system.
+For high-throughput runs or automated setups, consider integrating the pipeline into a shell script or workflow manager.
