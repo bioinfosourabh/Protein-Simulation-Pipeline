@@ -3,7 +3,7 @@ This repository provides a complete step-by-step pipeline to run molecular dynam
 
 
 ## Requirements
-GROMACS installed and sourced
-Input file: Protein.pdb
-MDP files: ions.mdp, minim.mdp, nvt.mdp, npt.mdp, md.mdp
-Optional: xmgrace for visualization
+- GROMACS installed and sourced
+- Input file: Protein.pdb
+- MDP files: ions.mdp, minim.mdp, nvt.mdp, npt.mdp, md.mdp
+- Optional: xmgrace for visualization
