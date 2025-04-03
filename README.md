@@ -83,7 +83,7 @@ gmx rmsf -s md.tpr -f md_noPBC.xtc -o rmsf.xvg -res
 gmx gyrate -s md.tpr -f md_noPBC.xtc -o gyrate.xvg
 ```
 
-
+## Output Summary
 | File  | Description
 |----------|----------|
 | *.gro, topol.top  | Coordinate and topology files   |
@@ -95,3 +95,4 @@ All intermediate and final results are saved step-by-step to maintain reproducib
 ## Notes
 Ensure the .mdp files used for each phase are appropriately tuned to your simulation system.
 For high-throughput runs or automated setups, consider integrating the pipeline into a shell script or workflow manager.
+
