@@ -10,61 +10,84 @@ This setup is intended for researchers working on protein stability, folding, or
 - Optional: xmgrace or any other .xvg file plotting tool for visualization
 
 
-## Pipeline Steps
-## 1. Source GROMACS
+## Workflow Overview
+## 1. Environment Setup
 ```sh
-
+source /usr/local/gromacs/bin/GMXRC
+gmx
 ```
 
-## 2. Run GROMACS Command-Line Tool
+## 2. Structure Preparation
+- Remove crystallographic water molecules
+- Generate topology and initial coordinate files using a selected force field (e.g., OPLS-AA)
 ```sh
-
+grep -v HOH Protein.pdb > clean.pdb
+gmx pdb2gmx -f clean.pdb -o protein.gro -water spce -ignh
 ```
 
-## 3. Clean the Input Structure (Remove Water)
+## 3. Define Simulation Box and Solvate
 ```sh
-
+gmx editconf -f protein.gro -o box.gro -c -d 1.0 -bt cubic
+gmx solvate -cp box.gro -cs spc216.gro -o solv.gro -p topol.top
 ```
 
-## 4. Generate Topology and Coordinate File
+## 4. Add Ions to Neutralize the System
+```sh
+gmx grompp -f ions.mdp -c solv.gro -p topol.top -o ions.tpr
+gmx genion -s ions.tpr -o solv_ions.gro -p topol.top -pname NA -nname CL -neutral
+```
 
+## 5. Energy Minimization
+```sh
+gmx grompp -f minim.mdp -c solv_ions.gro -p topol.top -o em.tpr
+gmx mdrun -v -deffnm em
+```
 
+## 6. Equilibration
+- NVT (Constant Volume and Temperature)
+```sh
+gmx grompp -f nvt.mdp -c em.gro -r em.gro -p topol.top -o nvt.tpr
+gmx mdrun -deffnm nvt
+gmx energy -f nvt.edr -o temperature.xvg
+```
 
-5. Define Simulation Box
+- NPT (Constant Pressure and Temperature)
+```sh
+gmx grompp -f npt.mdp -c nvt.gro -r nvt.gro -t nvt.cpt -p topol.top -o npt.tpr
+gmx mdrun -deffnm npt
+gmx energy -f npt.edr -o pressure.xvg
+gmx energy -f npt.edr -o density.xvg
+```
 
-6. Solvate the Protein
-
-7. Add Ions
-
-8. Energy Minimization
-
-
-9. Plot Energy
-
-10. NVT Equilibration
-
-11. NPT Equilibration
-
-12. Production MD
-
+## 7. Production MD Run
+```sh
+gmx grompp -f md.mdp -c npt.gro -t npt.cpt -p topol.top -o md.tpr
+gmx mdrun -deffnm md
+```
 
 # Post-Simulation Analysis
+## Trajectory Processing and Analysis
+- Remove periodic boundary artifacts and center molecule:
+```sh
+gmx trjconv -s md.tpr -f md.xtc -o md_noPBC.xtc -pbc mol -center
+```
 
-## 13. Remove PBC and Center
+## RMSD and RMSF Analysis
+```sh
+gmx rms -s md.tpr -f md_noPBC.xtc -o rmsd.xvg -tu ns
+gmx rmsf -s md.tpr -f md_noPBC.xtc -o rmsf.xvg -res
+```
+
+## Radius of Gyration
+```sh
+gmx gyrate -s md.tpr -f md_noPBC.xtc -o gyrate.xvg
+```
 
 
-## 14. RMSD Analysis
-
-
-## 15. RMSF Analysis
-
-## 16. Radius of Gyration
-
-
-
-
-
-
-
+| File  | Description
+|----------|----------|
+| *.gro, topol.top  | Coordinate and topology files   |
+| *.tpr, *.cpt, *.edr  | Run input and output files   |
+| *.xvg  | Energy and analysis output for plotting   |
 
 
