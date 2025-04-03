@@ -97,5 +97,5 @@ Ensure the .mdp files used for each phase are appropriately tuned to your simula
 For high-throughput runs or automated setups, consider integrating the pipeline into a shell script or workflow manager.
 
 ## Maintainer
-Sourabh Kumarbioinfosourabh@gmail.com
-This repository is open for contributions, issues, and suggestions to enhance utility for the molecular simulation community.
+- Sourabh Kumar bioinfosourabh@gmail.com
+- This repository is open for contributions, issues, and suggestions to enhance utility for the molecular simulation community.
