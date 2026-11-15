@@ -1,12 +1,12 @@
-# Protein-Simulation-Pipeline
-This repository provides a comprehensive and structured workflow to perform molecular dynamics (MD) simulations of proteins using GROMACS. The pipeline begins with protein structure preparation and proceeds through solvation, energy minimization, equilibration phases (NVT and NPT), production MD run, and ends with essential post-simulation analyses.
+# Protein Simulation Pipeline (GROMACS)
+A step-by-step command-line protocol for molecular dynamics (MD) simulations of proteins using GROMACS. The pipeline begins with protein structure preparation and proceeds through solvation, energy minimization, equilibration phases (NVT and NPT), production MD run, and ends with essential post-simulation analyses.
 
 This setup is intended for researchers working on protein stability, folding, or interaction studies, and is adaptable to a range of simulation conditions with appropriate .mdp configuration files.
 
 ## Requirements
 - GROMACS (2020 or later recommended) installed and sourced properly
 - Input protein structure file in PDB format: Protein.pdb
-- Simulation parameter files: ions.mdp, minim.mdp, nvt.mdp, npt.mdp, md.mdp
+- Simulation parameter files: ions.mdp, minim.mdp, nvt.mdp, npt.mdp, md.mdp (not included in this repository; supply files tuned to your system)
 - Optional: xmgrace or any other .xvg file plotting tool for visualization
 
 
@@ -19,7 +19,7 @@ gmx
 
 ## 2. Structure Preparation
 - Remove crystallographic water molecules
-- Generate topology and initial coordinate files using a selected force field (e.g., OPLS-AA)
+- Generate topology and initial coordinate files using a selected force field (e.g., OPLS-AA); `pdb2gmx` asks for the force field interactively unless `-ff` is given
 ```sh
 grep -v HOH Protein.pdb > clean.pdb
 gmx pdb2gmx -f clean.pdb -o protein.gro -water spce -ignh
@@ -89,6 +89,7 @@ gmx gyrate -s md.tpr -f md_noPBC.xtc -o gyrate.xvg
 | *.gro, topol.top  | Coordinate and topology files   |
 | *.tpr, *.cpt, *.edr  | Run input and output files   |
 | *.xvg  | Energy and analysis output for plotting   |
+
 All intermediate and final results are saved step-by-step to maintain reproducibility and traceability.
 
 
@@ -96,6 +97,12 @@ All intermediate and final results are saved step-by-step to maintain reproducib
 Ensure the .mdp files used for each phase are appropriately tuned to your simulation system.
 For high-throughput runs or automated setups, consider integrating the pipeline into a shell script or workflow manager.
 
-## Maintainer
-- Sourabh Kumar bioinfosourabh@gmail.com
-- This repository is open for contributions, issues, and suggestions to enhance utility for the molecular simulation community.
+## License
+
+MIT, see [LICENSE](LICENSE).
+
+## Author
+
+Sourabh Kumar · [bioinfosourabh@gmail.com](mailto:bioinfosourabh@gmail.com) · [bioinfosourabh.netlify.app](https://bioinfosourabh.netlify.app) · ORCID [0009-0009-5840-9830](https://orcid.org/0009-0009-5840-9830)
+
+Issues and suggestions are welcome.
